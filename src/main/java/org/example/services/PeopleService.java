@@ -13,31 +13,38 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class PeopleService {
     private final PeopleRepository peopleRepository;
+
     @Autowired
     public PeopleService(PeopleRepository peopleRepository) {
         this.peopleRepository = peopleRepository;
     }
-    public List<Person>  findAll (){
+
+    public List<Person> findAll() {
         return peopleRepository.findAll();
     }
-    public Person findOne(int id){
-        Optional<Person> foundPerson=peopleRepository.findById(id);
+
+    public Person findOne(int id) {
+        Optional<Person> foundPerson = peopleRepository.findById(id);
         return foundPerson.orElse(null);
     }
+
     @Transactional
-    public void save(Person person){
+    public void save(Person person) {
         peopleRepository.save(person);
     }
+
     @Transactional
-    public void update(int id, Person updatedPerson){
+    public void update(int id, Person updatedPerson) {
         updatedPerson.setId(id);
         peopleRepository.save(updatedPerson);
     }
+
     @Transactional
-    public void delete(int id){
+    public void delete(int id) {
         peopleRepository.deleteById(id);
     }
-    public Optional<Person> findByFullName(String fullName){
+
+    public Optional<Person> findByFullName(String fullName) {
         return peopleRepository.findByFullName(fullName);
     }
 }

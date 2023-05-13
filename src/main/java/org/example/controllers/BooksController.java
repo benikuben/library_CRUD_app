@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
@@ -63,8 +62,10 @@ public class BooksController {
     }
 
     @GetMapping()
-    public String index(Model model) {
-        model.addAttribute("books", booksService.findAll());
+    public String index(Model model, @RequestParam(value = "page", required = false) String page,
+                        @RequestParam(value = "books_per_page", required = false) String booksPerPage,
+                        @RequestParam(value = "sort_by_year", required = false) String sortByYear) {
+        model.addAttribute("books", booksService.findAll(page, booksPerPage, sortByYear));
         return "books/index";
     }
 
@@ -73,7 +74,7 @@ public class BooksController {
                        @ModelAttribute("person") Person person) {
         model.addAttribute("book", booksService.findOne(id));
         Person personTakesBook = booksService.findPersonById(id);
-        if (personTakesBook!=null)
+        if (personTakesBook != null)
             model.addAttribute("personTakesBook", personTakesBook);
         else model.addAttribute("people", peopleService.findAll());
         return "books/show";
@@ -89,5 +90,17 @@ public class BooksController {
     public String returnBook(@PathVariable("id") int id) {
         booksService.update(id);
         return "redirect:/books/" + id;
+    }
+
+    @GetMapping("/search")
+    public String search() {
+        return "books/search";
+    }
+
+    @GetMapping("/search/")
+    public String search(@RequestParam(required = false, value = "starting_with") String startingWith,
+                         Model model) {
+        model.addAttribute("books", booksService.findByTitleStartingWith(startingWith));
+        return "books/search";
     }
 }

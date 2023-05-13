@@ -15,7 +15,9 @@
     <hr/>
     <p>Books:</p>
     <table th:each="book : ${takenBooks}">
-        <tr th:text="${book.getTitle()+', '+book.getAuthor()+', '+book.getYear()}"/>
+        <tr th:style="${book.getGreaterThanExpiredDeadline()} ? 'color:red'">
+            <td th:text="${book.getTitle()+', '+book.getAuthor()+', '+book.getYear()}"></td>
+        </tr>
     </table>
 </div>
 
